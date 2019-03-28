@@ -18,7 +18,7 @@ namespace BTInheritance
         public new void nhap()
         {
             base.nhap();
-            Console.WriteLine("Tinh trang sach");
+            Console.WriteLine("Tinh trang sach (moi hay cu)");
             this.ttsach = Console.ReadLine();
         }
         public double tinhtien() 
