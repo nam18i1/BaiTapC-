@@ -39,7 +39,7 @@ namespace THWPF
 
         }
 
-        private void BtGT_Click(object sender, RoutedEventArgs e)
+        private void BtTongCanBac2_Click(object sender, RoutedEventArgs e)
         {
             int n = Int32.Parse(txtSoN.Text);
             double s = 0;
