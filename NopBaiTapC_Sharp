@@ -73,7 +73,7 @@ namespace QuanLyNV
                 ConnectDB();
                 cmd = new SqlCommand();
                 cmd.Connection = conn;
-                cmd.CommandText = "Insert into NopBT values(@CustomerID,@ComparyName,@ContactName,@ContactTitle,@Address,@City,@Region,@PostaCode,@Country,@Phone,@Fax)";
+                cmd.CommandText = "Insert into ThongTin values(@CustomerID,@ComparyName,@ContactName,@ContactTitle,@Address,@City,@Region,@PostaCode,@Country,@Phone,@Fax)";
                 cmd.Parameters.Add("@CustomerID", SqlDbType.NVarChar).Value = txtid.Text;
                 cmd.Parameters.Add("@ComparyName", SqlDbType.NVarChar).Value = txtCompary.Text;
                 cmd.Parameters.Add("@ContactName", SqlDbType.NVarChar).Value = txtContactName.Text;
