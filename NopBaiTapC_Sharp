@@ -49,7 +49,7 @@ namespace QuanLyNV
             try
             {
                 ConnectDB();
-                da = new SqlDataAdapter("select * from NopBT ", conn);
+                da = new SqlDataAdapter("select * from ThongTin ", conn);
                 ds = new DataSet();
                 da.Fill(ds);
                 show.ItemsSource = ds.Tables[0].DefaultView;
