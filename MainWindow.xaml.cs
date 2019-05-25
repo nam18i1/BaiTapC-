@@ -12,8 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Data;
 
-namespace THWPF
+namespace QuanLyNV
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -23,37 +26,95 @@ namespace THWPF
         public MainWindow()
         {
             InitializeComponent();
+            FilldataGird();
         }
-
-
-        private void TongMuX_Click(object sender, RoutedEventArgs e)
+        SqlConnection conn = null;
+        SqlCommand cmd = null;
+        SqlDataAdapter da;
+        DataSet ds;
+        public void ConnectDB()
         {
-            int n = Int32.Parse(txtsoN.Text);
-            double s = 0;
-            int x = 2;
-            for (int i = 1; i <= n; i++)
+            try
             {
-                s += Math.Pow(x, i);
+                conn = new SqlConnection(@"Data Source=DESKTOP-SFCSD63\SQLEXPRESS;Initial Catalog=QuanLyNV;Integrated Security=SSPI");
+                conn.Open();
             }
-            txtkq.Text = s.ToString();
-
-        }
-
-        private void BtTongCanBac2_Click(object sender, RoutedEventArgs e)
-        {
-            int n = Int32.Parse(txtSoN.Text);
-            double s = 0;
-            for (int i = 1; i <= n; i++)
+            catch (Exception ex)
             {
-                s += Math.Sqrt(i);
+                Console.WriteLine(ex.Message);
             }
-            txtKQ.Text = s.ToString();
+        }
+        public void FilldataGird()
+        {
+            try
+            {
+                ConnectDB();
+                da = new SqlDataAdapter("select * from NopBT ", conn);
+                ds = new DataSet();
+                da.Fill(ds);
+                show.ItemsSource = ds.Tables[0].DefaultView;
+                show.DisplayMemberPath = "CustomerID";
+                show.SelectedValuePath = "ComparyName";
+                conn.Close();
+                da.Dispose();
+                ds.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
-        private void Min_Click(object sender, RoutedEventArgs e)
+        private void TxbAdd_Click(object sender, RoutedEventArgs e)
         {
-            int[] m;
-            int n = Int32.Parse(textSoMang.Text);
+            try
+            {
+
+                ConnectDB();
+                cmd = new SqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "Insert into NopBT values(@CustomerID,@ComparyName,@ContactName,@ContactTitle,@Address,@City,@Region,@PostaCode,@Country,@Phone,@Fax)";
+                cmd.Parameters.Add("@CustomerID", SqlDbType.NVarChar).Value = txtid.Text;
+                cmd.Parameters.Add("@ComparyName", SqlDbType.NVarChar).Value = txtCompary.Text;
+                cmd.Parameters.Add("@ContactName", SqlDbType.NVarChar).Value = txtContactName.Text;
+                cmd.Parameters.Add("@ContactTitle", SqlDbType.NVarChar).Value = txtContactTitle.Text;
+                cmd.Parameters.Add("@Address", SqlDbType.NVarChar).Value = txtAddress.Text;
+                cmd.Parameters.Add("@City", SqlDbType.NVarChar).Value = txtCity.Text;
+                cmd.Parameters.Add("@Region", SqlDbType.NVarChar).Value = txtRegion.Text;
+                cmd.Parameters.Add("@PostaCode", SqlDbType.VarChar).Value = txtCode.Text;
+                cmd.Parameters.Add("@Country", SqlDbType.NVarChar).Value = txtCountry.Text;
+                cmd.Parameters.Add("@Phone", SqlDbType.VarChar).Value = txtPhone.Text;
+                cmd.Parameters.Add("@Fax", SqlDbType.VarChar).Value = txtFax.Text;
+                int n = cmd.ExecuteNonQuery();
+                if (n > 0) MessageBox.Show("Success");
+                else MessageBox.Show("Fail");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void TxbDelete_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectDB();
+            cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "Delete from NopBT where CustomerID = '" + txtid.Text + "'";
+            int n = cmd.ExecuteNonQuery();
+            if (n > 0) MessageBox.Show("Success");
+            else MessageBox.Show("Fail");
+        }
+
+        private void Txbload_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectDB();
+            cmd = new SqlCommand();
+            cmd.Connection = conn;
+            var load = new MainWindow();
+            load.Show();
+            this.Hide();
         }
     }
 }
+
